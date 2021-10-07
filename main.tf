@@ -1,8 +1,8 @@
 resource "aws_lambda_function" "lambda-python" {
   function_name = "${var.environment}-lambda-${var.username}"
 
-  s3_bucket = "terraform-serverless-${var.username}"
-  s3_key    = "v1.0.0/api.zip"
+  s3_bucket = "terraform-api-${var.username}"
+  s3_key    = "${var.environment}/${var.app_version}/api.zip"
 
   handler = "lambda_handler"
   runtime = "python3.8"
@@ -80,8 +80,6 @@ resource "aws_lambda_permission" "apigw" {
    function_name = aws_lambda_function.lambda-python.function_name
    principal     = "apigateway.amazonaws.com"
 
-   # The "/*/*" portion grants access from any method on any resource
-   # within the API Gateway REST API.
    source_arn = "${aws_api_gateway_rest_api.apiLambda.execution_arn}/*/*"
 }
 
